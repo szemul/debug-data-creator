@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "e169361280f75772f74269e93a6212c3",
+    "content-hash": "942e3f90683bfdfb594707b468f786ec",
     "packages": [
         {
             "name": "nesbot/carbon",
@@ -555,16 +555,16 @@
         },
         {
             "name": "szemul/error-handler",
-            "version": "dev-main",
+            "version": "v1.0.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/szemul/error-handler.git",
-                "reference": "c99bfe697c0ac4be3596d67c96cc9c8d19fd8bdb"
+                "reference": "9635bb6d8cb88339fa16a745396d900f0ff21b6d"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/szemul/error-handler/zipball/c99bfe697c0ac4be3596d67c96cc9c8d19fd8bdb",
-                "reference": "c99bfe697c0ac4be3596d67c96cc9c8d19fd8bdb",
+                "url": "https://api.github.com/repos/szemul/error-handler/zipball/9635bb6d8cb88339fa16a745396d900f0ff21b6d",
+                "reference": "9635bb6d8cb88339fa16a745396d900f0ff21b6d",
                 "shasum": ""
             },
             "require": {
@@ -578,7 +578,6 @@
                 "phpstan/phpstan": "^0.12.80",
                 "phpunit/phpunit": "^9.5.5"
             },
-            "default-branch": true,
             "type": "library",
             "autoload": {
                 "psr-4": {
@@ -592,9 +591,9 @@
             "description": "Simple extensible error handler",
             "support": {
                 "issues": "https://github.com/szemul/error-handler/issues",
-                "source": "https://github.com/szemul/error-handler/tree/main"
+                "source": "https://github.com/szemul/error-handler/tree/v1.0.0"
             },
-            "time": "2021-09-08T08:33:57+00:00"
+            "time": "2021-08-28T14:52:02+00:00"
         },
         {
             "name": "szemul/helper",
@@ -4693,7 +4692,6 @@
     "aliases": [],
     "minimum-stability": "stable",
     "stability-flags": {
-        "szemul/error-handler": 20,
         "szemul/helper": 20
     },
     "prefer-stable": false,
