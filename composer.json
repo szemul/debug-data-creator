@@ -6,7 +6,7 @@
     "require": {
         "php": "^8.0",
         "psr/log": "^1.0.1",
-        "szemul/error-handler": "dev-main",
+        "szemul/error-handler": "^v1.0.0",
         "szemul/helper": "dev-main"
     },
     "require-dev": {
