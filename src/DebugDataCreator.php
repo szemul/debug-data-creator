@@ -74,39 +74,106 @@ class DebugDataCreator implements ErrorHandlerInterface
         $file->fwrite($errorId . ' ' . $this->sanitizeErrorMessage($errorMessage) . "\n\n");
 
         if ($this->config->isExceptionEnabled() && $this->checkIfExceptionShouldBeIncluded($exception)) {
+            $data = $this->getExceptionData($exception);
             $file->fwrite("----- Exception -----\n\n");
-            $file->fwrite($this->varDumpHelper->captureVarDumpToString($exception) . "\n\n");
+            $this->varDumpHelper->varDumpToFile($file, $this->sanitizeTrace($data)); //@phpstan-ignore-line
+            $file->fwrite("\n\n");
         }
 
         if (null !== $backTrace && $this->config->isTraceEnabled()) {
             $file->fwrite("----- Debug backtrace -----\n\n");
-            $file->fwrite($this->varDumpHelper->captureVarDumpToString($this->sanitizeTrace($backTrace)) . "\n\n");
+            $this->varDumpHelper->varDumpToFile($file, $this->sanitizeTrace($backTrace));
+            $file->fwrite("\n\n");
         }
 
         if ($this->config->isServerEnabled()) {
             $file->fwrite("----- Server -----\n\n");
-            $file->fwrite($this->varDumpHelper->captureVarDumpToString($this->sanitizeServer($_SERVER)) . "\n\n");
+            $this->varDumpHelper->varDumpToFile($file, $this->sanitizeServer($_SERVER));
+            $file->fwrite("\n\n");
         }
 
         if ($this->config->isServerEnabled()) {
             $file->fwrite("----- Get -----\n\n");
-            $file->fwrite($this->varDumpHelper->captureVarDumpToString($this->sanitizeGet($_GET)) . "\n\n");
+            $this->varDumpHelper->varDumpToFile($file, $this->sanitizeGet($_GET));
+            $file->fwrite("\n\n");
         }
 
         if ($this->config->isServerEnabled()) {
             $file->fwrite("----- Post -----\n\n");
-            $file->fwrite($this->varDumpHelper->captureVarDumpToString($this->sanitizePost($_POST)) . "\n\n");
+            $this->varDumpHelper->varDumpToFile($file, $this->sanitizePost($_POST));
+            $file->fwrite("\n\n");
         }
 
         if ($this->config->isServerEnabled()) {
             $file->fwrite("----- Cookie -----\n\n");
-            $file->fwrite($this->varDumpHelper->captureVarDumpToString($this->sanitizeCookie($_COOKIE)) . "\n\n");
+            $this->varDumpHelper->varDumpToFile($file, $this->sanitizeCookie($_COOKIE));
+            $file->fwrite("\n\n");
         }
 
         if ($this->config->isServerEnabled()) {
             $file->fwrite("----- Env -----\n\n");
-            $file->fwrite($this->varDumpHelper->captureVarDumpToString($this->sanitizeEnv($_ENV)) . "\n\n");
+            $this->varDumpHelper->varDumpToFile($file, $this->sanitizeEnv($_ENV));
+            $file->fwrite("\n\n");
         }
+    }
+
+    /**
+     * @param int[] $processedExceptions
+     *
+     * @return array<string,mixed>|string|null
+     */
+    protected function getExceptionData(?Throwable $exception, array &$processedExceptions = []): array|string|null
+    {
+        if (null === $exception) {
+            return null;
+        }
+
+        $objectId = spl_object_id($exception);
+
+        if (in_array($objectId, $processedExceptions)) {
+            return '*** RECURSION ***';
+        }
+
+        $processedExceptions[] = $objectId;
+
+        $data = [
+            'exceptionClass' => get_class($exception),
+            'message'        => $exception->getMessage(),
+            'code'           => $exception->getCode(),
+            'file'           => $exception->getFile(),
+            'line'           => $exception->getLine(),
+            'trace'          => $this->sanitizeTrace($exception->getTrace()),
+            'previous'       => $this->getExceptionData($exception->getPrevious(), $processedExceptions),
+        ];
+
+        $reflection = new \ReflectionObject($exception);
+
+        $builtInMethods = [
+            'getMessage',
+            'getCode',
+            'getFile',
+            'getLine',
+            'getPrevious',
+            'getTrace',
+            'getTraceAsString',
+        ];
+
+        foreach ($reflection->getMethods(\ReflectionMethod::IS_PUBLIC) as $method) {
+            $methodName = $method->getName();
+            if (!str_starts_with($methodName, 'get') || in_array($methodName, $builtInMethods)) {
+                continue;
+            }
+
+            $value = $exception->$methodName();
+
+            if ($value instanceof Throwable) {
+                $value = $this->getExceptionData($value, $processedExceptions);
+            }
+
+            $data[$methodName] = $value;
+        }
+
+        return $data;
     }
 
     protected function sanitizeErrorMessage(string $errorMessage): string
@@ -119,9 +186,9 @@ class DebugDataCreator implements ErrorHandlerInterface
     }
 
     /**
-     * @param array<string,mixed> $backTrace
+     * @param array<int,array<string,mixed>> $backTrace
      *
-     * @return array<string,mixed>
+     * @return array<int,array<string,mixed>>
      */
     protected function sanitizeTrace(array $backTrace): array
     {
