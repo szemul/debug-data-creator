@@ -30,7 +30,7 @@ class RegexClassFilteringSanitizer extends NoopSanitizer
                 foreach ($this->filterPatterns as $pattern) {
                     $class = get_class($value);
                     if (preg_match($pattern, $class)) {
-                        $value = $data[$key] = '*** Removed by blacklist. Class of ' . $class . ' ***';
+                        $value = $array[$key] = '*** Removed by blacklist. Class of ' . $class . ' ***';
                         break;
                     }
                 }
@@ -52,7 +52,7 @@ class RegexClassFilteringSanitizer extends NoopSanitizer
                     )
                 )
             ) {
-                $data[$key] = $this->sanitizeArray($value, $recursionDepth + 1);
+                $array[$key] = $this->sanitizeArray($value, $recursionDepth + 1);
             }
         }
 
