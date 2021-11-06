@@ -1,5 +1,8 @@
 # Debug data creator
 
+![CI pipeline](https://github.com/szemul/debug-data-creator/actions/workflows/php.yml/badge.svg)
+[![codecov](https://codecov.io/gh/szemul/debug-data-creator/branch/main/graph/badge.svg?token=18YTWE8BFM)](https://codecov.io/gh/szemul/debug-data-creator)
+
 Error handler to create debug/trace files to aid in debugging.
 
 ## Data categories
