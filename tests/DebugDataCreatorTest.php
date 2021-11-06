@@ -335,7 +335,7 @@ class DebugDataCreatorTest extends TestCase
             ->with("\n\n");
     }
 
-    private function setGlobals()
+    private function setGlobals(): void
     {
         $_GET = [
             'foo' => 'bar',

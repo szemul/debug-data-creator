@@ -10,7 +10,7 @@ use PHPUnit\Framework\TestCase;
 class NoopSanitizerTest extends TestCase
 {
     private const TEST_ARRAY = [
-        'foo' => 'bar'
+        'foo' => 'bar',
     ];
 
     private NoopSanitizer $sut;
