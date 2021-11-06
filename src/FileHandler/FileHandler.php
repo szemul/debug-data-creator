@@ -17,22 +17,24 @@ class FileHandler implements FileHandlerInterface
         int $directoryCreateMode = 0755,
         protected string $fileNameSuffix = '.log',
     ) {
-        $this->logDir = rtrim($logDir, '/') . '/';
+        $logDir = rtrim($logDir, '/');
 
-        if (file_exists($this->logDir)) {
-            if (!is_dir($this->logDir)) {
-                throw new LogDirIsNotADirectoryException($this->logDir);
+        if (file_exists($logDir)) {
+            if (!is_dir($logDir)) {
+                throw new LogDirIsNotADirectoryException($logDir);
             }
-            if (!is_writable($this->logDir)) {
-                throw new LogDirIsNotWritableException($this->logDir);
+            if (!is_writable($logDir)) {
+                throw new LogDirIsNotWritableException($logDir);
             }
         } else {
-            if (!mkdir($this->logDir, $directoryCreateMode, true)) {
-                throw new LogDirCreationFailedException($this->logDir);
+            if (!@mkdir($logDir, $directoryCreateMode, true)) {
+                throw new LogDirCreationFailedException($logDir);
             }
 
-            chmod($this->logDir, $directoryCreateMode);
+            chmod($logDir, $directoryCreateMode);
         }
+
+        $this->logDir = $logDir . '/';
     }
 
     public function doesLogFileExist(string $errorId): bool

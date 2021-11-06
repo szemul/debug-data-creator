@@ -6,10 +6,11 @@
     "require": {
         "php": "^8.0",
         "psr/log": "^1.0.1",
-        "szemul/error-handler": "^v1.0.0",
-        "szemul/helper": "dev-main"
+        "szemul/error-handler": "^2.0.0",
+        "szemul/helper": "^1.1.0"
     },
     "require-dev": {
+        "ext-posix": "*",
         "friendsofphp/php-cs-fixer": "^3.0.0",
         "jetbrains/phpstorm-attributes": "^1.0",
         "mockery/mockery": "^1.0",

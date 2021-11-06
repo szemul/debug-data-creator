@@ -84,7 +84,7 @@ class ServerAllowListSanitizer extends NoopSanitizer
         $allowedKeys = array_diff(
             $allowedKeys,
             array_map(
-                fn (string $header) => preg_replace('/[^_A-Z0-9]+/', '_', strtoupper(preg_replace('/^HTTP_/', '', $header))),
+                fn (string $header) => 'HTTP_' . preg_replace('/[^_A-Z0-9]+/', '_', strtoupper(preg_replace('/^HTTP_/', '', $header))),
                 $this->bannedHeaders,
             ),
         );

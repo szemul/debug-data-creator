@@ -92,25 +92,25 @@ class DebugDataCreator implements ErrorHandlerInterface
             $file->fwrite("\n\n");
         }
 
-        if ($this->config->isServerEnabled()) {
+        if ($this->config->isGetEnabled()) {
             $file->fwrite("----- Get -----\n\n");
             $this->varDumpHelper->varDumpToFile($file, $this->sanitizeGet($_GET));
             $file->fwrite("\n\n");
         }
 
-        if ($this->config->isServerEnabled()) {
+        if ($this->config->isPostEnabled()) {
             $file->fwrite("----- Post -----\n\n");
             $this->varDumpHelper->varDumpToFile($file, $this->sanitizePost($_POST));
             $file->fwrite("\n\n");
         }
 
-        if ($this->config->isServerEnabled()) {
+        if ($this->config->isCookieEnabled()) {
             $file->fwrite("----- Cookie -----\n\n");
             $this->varDumpHelper->varDumpToFile($file, $this->sanitizeCookie($_COOKIE));
             $file->fwrite("\n\n");
         }
 
-        if ($this->config->isServerEnabled()) {
+        if ($this->config->isEnvEnabled()) {
             $file->fwrite("----- Env -----\n\n");
             $this->varDumpHelper->varDumpToFile($file, $this->sanitizeEnv($_ENV));
             $file->fwrite("\n\n");
