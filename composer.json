@@ -5,7 +5,6 @@
     "minimum-stability": "stable",
     "require": {
         "php": "^8.0",
-        "psr/log": "^1.0.1",
         "szemul/error-handler": "^2.0.0",
         "szemul/helper": "^1.1.0"
     },
