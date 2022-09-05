@@ -3,6 +3,7 @@ declare(strict_types=1);
 
 namespace Szemul\DebugDataCreator\Test\Sanitizer;
 
+use ArrayIterator;
 use Mockery;
 use stdClass;
 use PHPUnit\Framework\TestCase;
@@ -28,6 +29,18 @@ class RegexClassFilteringSanitizerTest extends TestCase
                 'function' => 'bar',
                 'class'    => $class2,
             ],
+            new ArrayIterator([
+                'file'     => 'foo',
+                'line'     => 123,
+                'function' => 'foo',
+                'class'    => $class1,
+            ]),
+            new ArrayIterator([
+                'file'     => 'bar',
+                'line'     => 234,
+                'function' => 'bar',
+                'class'    => $class2,
+            ]),
         ];
 
         $expected = [
@@ -43,10 +56,22 @@ class RegexClassFilteringSanitizerTest extends TestCase
                 'function' => 'bar',
                 'class'    => $class2,
             ],
+            new ArrayIterator([
+                'file'     => 'foo',
+                'line'     => 123,
+                'function' => 'foo',
+                'class'    => '*** Removed by blacklist. Class of ' . get_class($class1) . ' ***',
+            ]),
+            new ArrayIterator([
+                'file'     => 'bar',
+                'line'     => 234,
+                'function' => 'bar',
+                'class'    => $class2,
+            ]),
         ];
 
         $actual = (new RegexClassFilteringSanitizer(10, '/^.*std[cC]lass.*/'))->sanitizeBackTrace($trace);
 
-        $this->assertSame($expected, $actual);
+        $this->assertEquals($expected, $actual);
     }
 }

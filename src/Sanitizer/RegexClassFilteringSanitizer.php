@@ -3,6 +3,10 @@ declare(strict_types=1);
 
 namespace Szemul\DebugDataCreator\Sanitizer;
 
+use ArrayAccess;
+use Iterator;
+use IteratorAggregate;
+
 class RegexClassFilteringSanitizer extends NoopSanitizer
 {
     /** @var string[] */
@@ -19,11 +23,11 @@ class RegexClassFilteringSanitizer extends NoopSanitizer
     }
 
     /**
-     * @param array<int|string,mixed> $array
+     * @param array<int|string,mixed>|Iterator<int|string,mixed>|IteratorAggregate<int|string,mixed> $array
      *
-     * @return array<int|string,mixed>
+     * @return array<int|string,mixed>|Iterator<int|string,mixed>|IteratorAggregate<int|string,mixed>
      */
-    protected function sanitizeArray(array $array, int $recursionDepth = 0): array
+    protected function sanitizeArray(array|Iterator|IteratorAggregate $array, int $recursionDepth = 0): array|Iterator|IteratorAggregate
     {
         foreach ($array as $key => $value) {
             if (is_object($value)) {
@@ -45,10 +49,10 @@ class RegexClassFilteringSanitizer extends NoopSanitizer
             if (
                 is_array($value)
                 || (
-                    $value instanceof \ArrayAccess
+                    $value instanceof ArrayAccess
                     && (
-                        $value instanceof \Iterator
-                        || $value instanceof \IteratorAggregate
+                        $value instanceof Iterator
+                        || $value instanceof IteratorAggregate
                     )
                 )
             ) {
