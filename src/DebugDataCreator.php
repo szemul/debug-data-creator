@@ -160,11 +160,20 @@ class DebugDataCreator implements ErrorHandlerInterface
 
         foreach ($reflection->getMethods(\ReflectionMethod::IS_PUBLIC) as $method) {
             $methodName = $method->getName();
-            if (!str_starts_with($methodName, 'get') || in_array($methodName, $builtInMethods)) {
+            if (
+                !str_starts_with($methodName, 'get')
+                || in_array($methodName, $builtInMethods)
+                || $method->getNumberOfParameters() > 0
+            ) {
                 continue;
             }
 
-            $value = $exception->$methodName();
+            try {
+                $value = $exception->$methodName();
+            } catch (\Throwable) {
+                // Ignore the error
+                continue;
+            }
 
             if ($value instanceof Throwable) {
                 $value = $this->getExceptionData($value, $processedExceptions);
